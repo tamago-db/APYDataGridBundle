@@ -647,17 +647,43 @@ class Grid
         return false;
     }
 
+    /**
+     * @todo Filter value management needs to be wrapped in a filter class of some sort
+     */
+    private function getFilterValue($column)
+    {
+        // Nothing in the request
+        if (! isset($this->requestData[$column->getId()])) {
+            return null;
+        }
+
+        $data = $this->requestData[$column->getId()];
+
+        if (is_string($data)) {
+            return $data ?: null;
+        } elseif (is_array($data)) {
+            if (isset($data['from'][0])) {
+                if (! empty($data['from'][0])) {
+                    return $data;
+                }
+            } elseif (! empty($data['from'])) {
+                return $data;
+            }
+        }
+
+        return null;
+    }
+
     protected function processRequestFilters()
     {
         foreach ($this->columns as $column) {
             // Loop through filterable columns
             if ($column->isFilterable()) {
-                $columnId = $column->getId();
-                $this->sessionData[$columnId] = isset($this->requestData[$columnId]) ? $this->requestData[$columnId] : null;
+                $this->sessionData[$column->getId()] = $this->getFilterValue($column);
             }
         }
     }
-
+    
     protected function processPage($page, $filtering = false)
     {
         // Set to the first page if this is a request of order, limit, mass action or filtering
