@@ -661,9 +661,12 @@ class Grid
 
         if (is_string($data)) {
             return $data ?: null;
-        } elseif (is_array($data)) {
+        }
+        elseif (is_array($data)) {
             if (isset($data['from'][0])) {
-                if (! empty($data['from'][0])) {
+                // Don't use empty since "0" is considered to be empty
+                //if (! empty($data['from'][0])) {
+                if ('' != $data['from'][0]) {
                     return $data;
                 }
             } elseif (! empty($data['from'])) {
