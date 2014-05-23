@@ -310,7 +310,7 @@ class Entity extends Source
      * @param int $gridDataJunction  Grid data junction
      * @return \APY\DataGridBundle\Grid\Rows
      */
-    public function execute($columns, $page = 0, $limit = 0, $maxResults = null, $gridDataJunction = Column::DATA_CONJUNCTION)
+    public function execute($columns, $page = 0, $limit = 0, $maxResults = null, $gridDataJunction = Column::DATA_CONJUNCTION, $ignoreFilters = false)
     {
         $this->query = $this->getQueryBuilder();
         $this->querySelectfromSource = clone $this->query;
@@ -328,7 +328,7 @@ class Entity extends Source
                 $this->query->orderBy($this->getFieldName($column), $column->getOrder());
             }
 
-            if ($column->isFiltered()) {
+            if ($column->isFiltered() && ! $ignoreFilters) {
                 // Some attributes of the column can be changed in this function
                 $filters = $column->getFilters('entity');
 
@@ -414,8 +414,6 @@ class Entity extends Source
         foreach ($this->hints as $hintKey => $hintValue) {
             $query->setHint($hintKey, $hintValue);
         }
-
-//        die($query->getSQL());
 
         $items = $query->getResult();
 

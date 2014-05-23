@@ -141,7 +141,7 @@ class Document extends Source
      * @param int $gridDataJunction  Grid data junction
      * @return \APY\DataGridBundle\Grid\Rows
      */
-    public function execute($columns, $page = 0, $limit = 0, $maxResults = null, $gridDataJunction = Column::DATA_CONJUNCTION)
+    public function execute($columns, $page = 0, $limit = 0, $maxResults = null, $gridDataJunction = Column::DATA_CONJUNCTION, $ignoreFilters = false)
     {
         $this->query = $this->manager->createQueryBuilder($this->documentName);
 
@@ -154,7 +154,7 @@ class Document extends Source
 
             if ($column->isPrimary()) {
                 $column->setFilterable(false);
-            } elseif ($column->isFiltered()) {
+            } elseif ($column->isFiltered() && ! $ignoreFilters) {
                 // Some attributes of the column can be changed in this function
                 $filters = $column->getFilters('document');
 

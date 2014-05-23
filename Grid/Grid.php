@@ -140,6 +140,11 @@ class Grid
     /**
      * @var boolean
      */
+    protected $ignoreFilters = false;
+
+    /**
+     * @var boolean
+     */
     protected $showTitles = true;
 
     /**
@@ -863,9 +868,9 @@ class Grid
         }
 
         if ($this->source->isDataLoaded()) {
-            $this->rows = $this->source->executeFromData($this->columns->getIterator(true), $this->page, $this->limit, $this->maxResults);
+            $this->rows = $this->source->executeFromData($this->columns->getIterator(true), $this->page, $this->limit, $this->maxResults, $this->ignoreFilters);
         } else {
-            $this->rows = $this->source->execute($this->columns->getIterator(true), $this->page, $this->limit, $this->maxResults, $this->dataJunction);
+            $this->rows = $this->source->execute($this->columns->getIterator(true), $this->page, $this->limit, $this->maxResults, $this->dataJunction, $this->ignoreFilters);
         }
 
         if (!$this->rows instanceof Rows) {
@@ -1717,6 +1722,18 @@ class Grid
     public function hideFilters()
     {
         $this->showFilters = false;
+
+        return $this;
+    }
+
+    /**
+     * Ignores filters when quering the data source
+     *
+     * @return self
+     */
+    public function ignoreFilters()
+    {
+        $this->ignoreFilters = true;
 
         return $this;
     }

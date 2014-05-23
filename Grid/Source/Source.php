@@ -79,7 +79,7 @@ abstract class Source implements DriverInterface
      * @param int $gridDataJunction Grid data junction
      * @return \APY\DataGridBundle\Grid\Rows
      */
-    abstract public function execute($columns, $page = 0, $limit = 0, $maxResults = null, $gridDataJunction = Column::DATA_CONJUNCTION);
+    abstract public function execute($columns, $page = 0, $limit = 0, $maxResults = null, $gridDataJunction = Column::DATA_CONJUNCTION, $ignoreFilters = false);
 
     /**
      * Get Total count of data items
@@ -229,7 +229,7 @@ abstract class Source implements DriverInterface
      * @param int $limit
      * @return \APY\DataGridBundle\DataGrid\Rows
      */
-    public function executeFromData($columns, $page = 0, $limit = 0, $maxResults = null)
+    public function executeFromData($columns, $page = 0, $limit = 0, $maxResults = null, $ignoreFilters = false)
     {
         // Populate from data
         $items = $this->getItemsFromData($columns);
@@ -248,7 +248,7 @@ abstract class Source implements DriverInterface
                 }
 
                 // Filter
-                if ($column->isFiltered()) {
+                if ($column->isFiltered() && ! $ignoreFilters) {
                     // Some attributes of the column can be changed in this function
                     $filters = $column->getFilters('vector');
 

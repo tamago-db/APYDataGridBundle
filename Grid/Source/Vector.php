@@ -186,9 +186,9 @@ class Vector extends Source
      * @param int $gridDataJunction  Grid data junction
      * @return \APY\DataGridBundle\Grid\Rows
      */
-    public function execute($columns, $page = 0, $limit = 0, $maxResults = null, $gridDataJunction = Column::DATA_CONJUNCTION)
+    public function execute($columns, $page = 0, $limit = 0, $maxResults = null, $gridDataJunction = Column::DATA_CONJUNCTION, $ignoreFilters = false)
     {
-        return $this->executeFromData($columns, $page, $limit, $maxResults);
+        return $this->executeFromData($columns, $page, $limit, $maxResults, $ignoreFilters);
     }
 
     public function populateSelectFilters($columns, $loop = false)
