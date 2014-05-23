@@ -414,6 +414,9 @@ class Entity extends Source
         foreach ($this->hints as $hintKey => $hintValue) {
             $query->setHint($hintKey, $hintValue);
         }
+
+//        die($query->getSQL());
+
         $items = $query->getResult();
 
         $repository = $this->manager->getRepository($this->entityName);

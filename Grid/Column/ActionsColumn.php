@@ -23,6 +23,7 @@ class ActionsColumn extends Column
         parent::__construct(array(
             'id'         => $column,
             'title'      => $title,
+            'size'       => '80px',
             'sortable'   => false,
             'source'     => false,
             'filterable' => true // Show a reset link instead of a filter
