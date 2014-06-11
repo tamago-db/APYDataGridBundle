@@ -71,7 +71,6 @@ abstract class Column
     protected $field;
     protected $role;
     protected $filterType;
-    protected $filter;
     protected $params;
     protected $isSorted = false;
     protected $orderUrl;
@@ -90,6 +89,8 @@ abstract class Column
     protected $joinType;
     protected $export;
     protected $class;
+    protected $isManualField;
+    protected $isAggregate;
 
     protected $dataJunction = self::DATA_CONJUNCTION;
 
@@ -125,6 +126,9 @@ abstract class Column
         $this->setSelectFrom($this->getParam('selectFrom', 'query'));
         $this->setValues($this->getParam('values', array()));
         $this->setOperatorsVisible($this->getParam('operatorsVisible', true));
+        $this->setIsManualField($this->getParam('isManualField', false));
+        $this->setIsAggregate($this->getParam('isAggregate', false));
+
         // Order is important for the order display
         $this->setOperators($this->getParam('operators', array(
             self::OPERATOR_EQ,
@@ -149,6 +153,7 @@ abstract class Column
         $this->setSafe($this->getParam('safe', 'html'));
         $this->setSeparator($this->getParam('separator', "<br />"));
         $this->setExport($this->getParam('export'));
+        $this->setClass($this->getParam('class'));
     }
 
     protected function getParam($id, $default = null)
@@ -384,18 +389,6 @@ abstract class Column
     public function getSize()
     {
         return $this->size;
-    }
-
-    public function setOrderUrl($orderUrl)
-    {
-        $this->orderUrl = $orderUrl;
-
-        return $this;
-    }
-
-    public function getOrderUrl()
-    {
-        return $this->orderUrl;
     }
 
     /**
@@ -818,7 +811,7 @@ abstract class Column
     /**
      * Allows to set twig escaping parameter (html, js, css, url, html_attr)
      * or to display raw value if type is false
-     * @param type $safeOption can be one of raw, html, js, css, url, html_attr
+     * @param string|bool $safeOption can be one of false, html, js, css, url, html_attr
      * @return \APY\DataGridBundle\Grid\Column\Column
      */
     public function setSafe($safeOption)
@@ -880,4 +873,26 @@ abstract class Column
     {
         return $this->class;
     }
+
+
+    public function setIsManualField($isManualField)
+    {
+        $this->isManualField = $isManualField;
+    }
+
+    public function getIsManualField()
+    {
+        return $this->isManualField;
+    }
+
+    public function setIsAggregate($isAggregate)
+    {
+        $this->isAggregate = $isAggregate;
+    }
+
+    public function getIsAggregate()
+    {
+        return $this->isAggregate;
+    }
+
 }
