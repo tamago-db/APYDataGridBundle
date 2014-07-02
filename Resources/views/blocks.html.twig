@@ -442,10 +442,10 @@ function {{ grid.hash }}_markVisible(select)
 {
     var form = document.getElementById('{{ grid.hash }}');
 
-    var counter = 0;
+    var counter = 1;
 
     for (var i=0; i < form.elements.length; i++ ) {
-        if (form.elements[i].type == 'checkbox') {
+        if (form.elements[i].type == 'checkbox' && form.elements[i].className == 'action') {
             form.elements[i].checked = select;
 
             if (form.elements[i].checked){
