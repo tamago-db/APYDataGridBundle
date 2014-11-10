@@ -1339,7 +1339,12 @@ class Grid
      */
     public function getRouteParameters()
     {
-        return $this->routeParameters;
+        $params = $this->routeParameters;
+        // iframe customization for Tamago-DB
+        if ($this->request->query->get('iframe')) {
+            $params['iframe'] = 'true';
+        }
+        return $params;
     }
 
     /**
@@ -1366,6 +1371,7 @@ class Grid
         if ($this->routeUrl === null) {
             $this->routeUrl = $this->router->generate($this->request->get('_route'), $this->getRouteParameters());
         }
+
 
         return $this->routeUrl;
     }
