@@ -707,6 +707,12 @@ class Entity extends Source
         return $this->entityName;
     }
 
+    public function getEntityClassName()
+    {
+        $entityArray = explode(':', $this->getEntityName());
+        return end($entityArray);
+    }
+
     /**
      * @param string $tableAlias
      */
