@@ -91,7 +91,7 @@
     <tr class="grid-row-filters">
     {% for column in grid.columns %}
         {% if column.visible(grid.isReadyForExport) %}
-        <th class="{% if column.class %}{{ column.class }}{% endif %}{% if loop.last %} last-column{% endif %}"{% if(column.size != -1) %} style="width:{{ column.size }};"{% endif %}>{% if column.filterable %}{{ grid_filter(column, grid)|raw }}{% endif %}</th>
+        <th class="{% if column.class %}{{ column.class }}{% endif %}{% if column.filtered %} filtered{% endif %}{% if loop.last %} last-column{% endif %}"{% if(column.size != -1) %} style="width:{{ column.size }};"{% endif %}>{% if column.filterable %}{{ grid_filter(column, grid)|raw }}{% endif %}</th>
         {% endif %}
     {% endfor %}
     </tr>
@@ -120,7 +120,7 @@
         {% set gridColumns %}
             {% for column in grid.columns %}
                 {% if column.visible(grid.isReadyForExport) %}
-                    <td class="grid-column-{{ column.renderBlockId }}{% if column.class %} {{ column.class }}{% endif %}{% if column.align != 'left'%} align-{{ column.align }}{% endif %}{% if loop.last %} last-column{% endif %}{% if last_row %} last-row{% endif %}">{{ grid_cell(column, row, grid)|raw }}</td>
+                    <td class="grid-column-{{ column.renderBlockId }}{% if column.class %} {{ column.class }}{% endif %}{% if column.filtered %} filtered{% endif %}{% if column.align != 'left'%} align-{{ column.align }}{% endif %}{% if loop.last %} last-column{% endif %}{% if last_row %} last-row{% endif %}">{{ grid_cell(column, row, grid)|raw }}</td>
                 {% endif %}
             {% endfor %}
         {% endset %}
