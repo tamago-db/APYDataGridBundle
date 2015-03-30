@@ -489,6 +489,19 @@ class Entity extends Source
         // Don't waste time sorting since it doesn't matter
         $countQueryBuilder->resetDqlPart('orderBy');
 
+        // Remove grouping
+        $countQueryBuilder->resetDqlPart('groupBy');
+
+        // Remove everything from select that's not a field
+        $selectParts = $countQueryBuilder->getDQLPart('select');
+        $countQueryBuilder->resetDQLPart('select');
+        foreach ($selectParts as $selectPart) {
+            $selectPartString = current($selectPart->getParts());
+            if ('_' == $selectPartString[0] ) {
+                $countQueryBuilder->addSelect($selectPartString);
+            }
+        }
+
         foreach ($countQueryBuilder->getRootAliases() as $alias) {
             $countQueryBuilder->addSelect($alias);
         }
