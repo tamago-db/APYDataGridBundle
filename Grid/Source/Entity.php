@@ -485,12 +485,17 @@ class Entity extends Source
     {
         // Doctrine Bug Workaround: http://www.doctrine-project.org/jira/browse/DDC-1927
         $countQueryBuilder = clone $this->query;
+
+        // Don't waste time sorting since it doesn't matter
+        $countQueryBuilder->resetDqlPart('orderBy');
+
         foreach ($countQueryBuilder->getRootAliases() as $alias) {
             $countQueryBuilder->addSelect($alias);
         }
 
         // From Doctrine\ORM\Tools\Pagination\Paginator::count()
         $countQuery = $countQueryBuilder->getQuery();
+
 
         // Add hints from main query, if developer wants to use additional hints (ex. gedmo translations):
         foreach ($this->hints as $hintName => $hintValue) {
