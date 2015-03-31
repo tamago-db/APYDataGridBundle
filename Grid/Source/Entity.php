@@ -492,42 +492,20 @@ class Entity extends Source
         // Remove grouping
         $countQueryBuilder->resetDqlPart('groupBy');
 
-        // Remove everything from select that's not a field
-        $selectParts = $countQueryBuilder->getDQLPart('select');
-        $countQueryBuilder->resetDQLPart('select');
-        foreach ($selectParts as $selectPart) {
-            $selectPartString = current($selectPart->getParts());
-            if ('_' == $selectPartString[0] ) {
-                $countQueryBuilder->addSelect($selectPartString);
-            }
-        }
-
-        foreach ($countQueryBuilder->getRootAliases() as $alias) {
-            $countQueryBuilder->addSelect($alias);
-        }
+        // Select count distinct
+        $countQueryBuilder->select($countQueryBuilder->expr()->countDistinct(
+            current($countQueryBuilder->getRootAliases()).'.id')
+        );
 
         // From Doctrine\ORM\Tools\Pagination\Paginator::count()
         $countQuery = $countQueryBuilder->getQuery();
-
 
         // Add hints from main query, if developer wants to use additional hints (ex. gedmo translations):
         foreach ($this->hints as $hintName => $hintValue) {
             $countQuery->setHint($hintName, $hintValue);
         }
 
-        if (! $countQuery->getHint(CountWalker::HINT_DISTINCT)) {
-            $countQuery->setHint(CountWalker::HINT_DISTINCT, true);
-        }
-
-        if ($countQuery->getHint(Query::HINT_CUSTOM_OUTPUT_WALKER) == false) {
-            $platform = $countQuery->getEntityManager()->getConnection()->getDatabasePlatform(); // law of demeter win
-
-            $rsm = new ResultSetMapping();
-            $rsm->addScalarResult($platform->getSQLResultCasing('dctrn_count'), 'count');
-
-            $countQuery->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, 'Doctrine\ORM\Tools\Pagination\CountOutputWalker');
-            $countQuery->setResultSetMapping($rsm);
-        } else {
+        if ($countQuery->getHint(Query::HINT_CUSTOM_OUTPUT_WALKER)) {
             $hints = $countQuery->getHint(Query::HINT_CUSTOM_TREE_WALKERS);
 
             if ($hints === false) {
@@ -535,15 +513,11 @@ class Entity extends Source
             }
 
             $hints[] = 'Doctrine\ORM\Tools\Pagination\CountWalker';
-            //$hints[] = 'APY\DataGridBundle\Grid\Helper\ORMCountWalker';
             $countQuery->setHint(Query::HINT_CUSTOM_TREE_WALKERS, $hints);
         }
-        $countQuery->setFirstResult(null)->setMaxResults($maxResults);
 
         try {
-            $data = $countQuery->getScalarResult();
-            $data = array_map('current', $data);
-            $count = array_sum($data);
+            $count = intval($countQuery->getSingleScalarResult());
         } catch (NoResultException $e) {
             $count = 0;
         }
