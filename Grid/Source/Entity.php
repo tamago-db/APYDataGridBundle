@@ -515,6 +515,7 @@ class Entity extends Source
             $hints[] = 'Doctrine\ORM\Tools\Pagination\CountWalker';
             $countQuery->setHint(Query::HINT_CUSTOM_TREE_WALKERS, $hints);
         }
+        $countQuery->setFirstResult(null)->setMaxResults($maxResults);
 
         try {
             $count = intval($countQuery->getSingleScalarResult());
