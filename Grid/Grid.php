@@ -367,12 +367,12 @@ class Grid
 
             $this->redirect = true;
         }
-
         if ($this->redirect === null || ($this->request->isXmlHttpRequest() && !$this->isReadyForExport)) {
             if ($this->newSession) {
                 $this->setDefaultSessionData();
             }
 
+            $this->processDefaultFilters();
             $this->processPermanentFilters();
 
             //Configures the grid with the data read from the session.
@@ -766,6 +766,7 @@ class Grid
         if ($this->defaultTweak !== null) {
             $this->processTweaks($this->defaultTweak);
         }
+
         $this->saveSession();
     }
 
@@ -776,6 +777,7 @@ class Grid
     {
         foreach (($permanent ? $this->permanentFilters : $this->defaultFilters) as $columnId => $value) {
             /* @var $column Column */
+
             $column = $this->columns->getColumnById($columnId);
 
             if ($permanent) {
