@@ -37,7 +37,7 @@ class Row
     {
         $primaryKeyValue = current($this->getPrimaryKeyValue());
 
-        return $this->repository->find($primaryKeyValue);
+        return $this->repository ? $this->repository->find($primaryKeyValue) : null;
     }
 
     public function setField($rowId, $value)

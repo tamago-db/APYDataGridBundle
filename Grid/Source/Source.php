@@ -13,7 +13,6 @@
 namespace APY\DataGridBundle\Grid\Source;
 
 use APY\DataGridBundle\Grid\Mapping\Driver\DriverInterface;
-use Symfony\Component\Form\Exception\PropertyAccessDeniedException;
 use APY\DataGridBundle\Grid\Column;
 use APY\DataGridBundle\Grid\Rows;
 use APY\DataGridBundle\Grid\Row;
@@ -210,7 +209,8 @@ abstract class Source implements DriverInterface
                            || is_callable(array($itemEntity, $fullFunctionName = 'is'.$functionName))) {
                         $fieldValue = call_user_func(array($itemEntity, $fullFunctionName));
                     } else {
-                        throw new PropertyAccessDeniedException(sprintf('Property "%s" is not public or has no accessor.', $fieldName));
+                        //throw new \RuntimeException(sprintf('Property "%s" is not public or has no accessor.', $fieldName));
+                        $fieldValues = null;
                     }
                 } elseif (isset($item[$fieldName])) {
                     $fieldValue = $item[$fieldName];
