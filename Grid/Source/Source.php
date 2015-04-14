@@ -193,7 +193,7 @@ abstract class Source implements DriverInterface
                         // loop through all elements until we find the final entity and the name of the value for which we are looking
                         $elements = explode('.', $fieldName);
                         while ($element = array_shift($elements)) {
-                            if (count($elements) > 0) {
+                            if (count($elements) > 0 && is_object($itemEntity)) {
                                 $itemEntity = call_user_func(array($itemEntity, 'get'.$element));
                             } else {
                                 $functionName = ucfirst($element);
