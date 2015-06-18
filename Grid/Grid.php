@@ -874,7 +874,6 @@ class Grid
         if ($this->prepared) {
             return $this;
         }
-
         if ($this->source->isDataLoaded()) {
             $this->rows = $this->source->executeFromData($this->columns->getIterator(true), $this->page, $this->limit, $this->maxResults, $this->ignoreFilters);
         } else {
@@ -1008,7 +1007,12 @@ class Grid
 
     protected function createHash()
     {
-        $this->hash = 'grid_'. (empty($this->id) ? md5($this->request->get('_controller').$this->columns->getHash().$this->source->getHash()) : $this->getId());
+        //$this->hash = 'grid_'. (empty($this->id) ? md5($this->request->get('_controller').$this->columns->getHash().$this->source->getHash()) : $this->getId());
+        $hash = md5($this->request->get('_controller').$this->columns->getHash().$this->source->getHash());
+        if ($id = $this->getId()) {
+            $hash = $id . '_' . $hash;
+        }
+        $this->hash = 'grid_' . $hash;
     }
 
     public function getHash()
