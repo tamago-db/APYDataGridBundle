@@ -1356,6 +1356,12 @@ class Grid
         if ($this->request->query->get('iframe')) {
             $params['iframe'] = 'true';
         }
+
+        // archived parameter for Tamago-DB
+        if ($this->request->query->has('archived')) {
+            $params['archived'] = 1;
+        }
+
         return $params;
     }
 
