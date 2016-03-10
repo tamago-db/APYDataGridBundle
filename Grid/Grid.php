@@ -1452,6 +1452,19 @@ class Grid
     }
 
     /**
+     * Remove filters for the current hash
+     *
+     * @return self
+     */
+    public function resetFilters()
+    {
+        $this->sessionData = array();
+        $this->session->remove($this->hash);
+
+        return $this;
+    }
+
+    /**
      * Set the default grid order.
      *
      * @param array Hash of columnName => initValue
