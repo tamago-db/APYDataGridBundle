@@ -298,8 +298,8 @@ class Grid
         $this->container = $container;
 
         $this->router = $container->get('router');
-        //$this->request = $container->get('request');
-        $this->request = $container->get('request_stack')->getMasterRequest();
+        $this->request = $container->get('request');
+        //$this->request = $container->get('request_stack')->getMasterRequest();
         $this->session = $this->request->getSession();
         $this->securityContext = $container->get('security.context');
 
