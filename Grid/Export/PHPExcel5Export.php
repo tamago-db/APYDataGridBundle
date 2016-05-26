@@ -39,7 +39,7 @@ class PHPExcel5Export extends Export
         foreach ($data as $line) {
             $column = 'A';
             foreach ($line as $cell) {
-                $this->objPHPExcel->getActiveSheet()->SetCellValue($column.$row, $cell);
+                $this->objPHPExcel->getActiveSheet()->SetCellValueExplicit($column.$row, $cell);
 
                 $column++;
             }
