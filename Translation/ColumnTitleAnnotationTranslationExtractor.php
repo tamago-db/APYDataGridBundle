@@ -63,10 +63,10 @@ class ColumnTitleAnnotationTranslationExtractor implements FileVisitorInterface,
             // Save messages for title
             foreach ($metadata->getFields() as $field) {
                 $mappedField = $metadata->getFieldMapping($field);
-                // Don't bother translating if not visible
-                if (isset($mappedField['visible']) && empty($mappedField['visible'])) {
-                    continue;
-                }
+                // Translate defined titles even if they are not visible as they may appear in exports or elsewhere
+                //if (isset($mappedField['visible']) && empty($mappedField['visible'])) {
+                //    continue;
+                //}
                 // If title is set and is not empty or false
                 if (! empty($mappedField['title'])) {
                     $message = new Message($mappedField['title']);
