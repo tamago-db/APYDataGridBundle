@@ -604,7 +604,7 @@ class Entity extends Source
                 // For negative operators, show all values
                 if ($selectFrom === 'query') {
                     foreach ($column->getFilters('entity') as $filter) {
-                        if (in_array($filter->getOperator(), array(Column::OPERATOR_NEQ, Column::OPERATOR_NLIKE,Column::OPERATOR_NSLIKE))) {
+                        if (in_array($filter->getOperator(), array(Column::OPERATOR_NEQ, Column::OPERATOR_NLIKE, Column::OPERATOR_NSLIKE))) {
                             $selectFrom = 'source';
                             break;
                         }
@@ -614,13 +614,18 @@ class Entity extends Source
                 // Dynamic from query or not ?
                 $query = ($selectFrom === 'source') ? clone $this->querySelectfromSource : clone $this->query;
 
-                $result = $query->select($this->getFieldName($column, true))
+                $query = $query->select($this->getFieldName($column, true))
                     ->distinct()
                     ->orderBy($this->getFieldName($column), 'asc')
                     ->setFirstResult(null)
                     ->setMaxResults(null)
                     ->getQuery()
-                    ->getResult();
+                ;
+
+                // Don't use cached queries in grid filters to avoid problems with Doctrine filters
+                $query->useQueryCache(false);
+
+                $result = $query->getResult();
 
                 $values = array();
                 foreach ($result as $row) {
