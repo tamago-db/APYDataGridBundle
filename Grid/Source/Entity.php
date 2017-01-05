@@ -614,13 +614,24 @@ class Entity extends Source
                 // Dynamic from query or not ?
                 $query = ($selectFrom === 'source') ? clone $this->querySelectfromSource : clone $this->query;
 
-                $query = $query->select($this->getFieldName($column, true))
+                $qb = $query->select($this->getFieldName($column, true))
                     ->distinct()
                     ->orderBy($this->getFieldName($column), 'asc')
                     ->setFirstResult(null)
                     ->setMaxResults(null)
-                    ->getQuery()
                 ;
+
+                // Make grid aware of archive filters
+                if ($filters = $qb->getEntityManager()->getFilters()) {
+                    if ($filters->isEnabled('archived')) {
+                        $qb->andWhere($qb->expr()->isNotNull($this->getTableAlias().'.archivedAt'));
+                    }
+                    if ($filters->isEnabled('unarchived')) {
+                        $qb->andWhere($qb->expr()->isNull($this->getTableAlias().'.archivedAt'));
+                    }
+                }
+
+                $query = $qb->getQuery();
 
                 // Don't use cached queries in grid filters to avoid problems with Doctrine filters
                 $query->useQueryCache(false);
