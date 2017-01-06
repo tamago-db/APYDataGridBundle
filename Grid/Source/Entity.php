@@ -21,6 +21,7 @@ use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 use Doctrine\ORM\Query\ResultSetMapping;
 use Doctrine\ORM\Tools\Pagination\CountWalker;
+use Tamago\DefaultBundle\Entity\ArchivableInterface;
 
 class Entity extends Source
 {
@@ -622,7 +623,9 @@ class Entity extends Source
                 ;
 
                 // Make grid aware of archive filters
-                if ($filters = $qb->getEntityManager()->getFilters()) {
+                // @todo Can we move this back into our overloaded Entity?
+                $rootEntity = new \ReflectionClass(current($qb->getRootEntities()));
+                if ($rootEntity->implementsInterface(ArchivableInterface::class) && $filters = $qb->getEntityManager()->getFilters()) {
                     if ($filters->isEnabled('archived')) {
                         $qb->andWhere($qb->expr()->isNotNull($this->getTableAlias().'.archivedAt'));
                     }
