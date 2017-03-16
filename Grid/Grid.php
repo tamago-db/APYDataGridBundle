@@ -290,6 +290,11 @@ class Grid
     protected $actionsColumnTitle;
 
     /**
+     * Base filename to use for export
+     */
+    protected $exportFileName;
+
+    /**
      * @param \Symfony\Component\DependencyInjection\Container $container
      * @param string $id set if you are using more then one grid inside controller
      */
@@ -540,6 +545,7 @@ class Grid
                 if ($export instanceof ContainerAwareInterface) {
                     $export->setContainer($this->container);
                 }
+                $export->setFileName($this->exportFileName);
                 $export->computeData($this);
 
                 $this->exportResponse = $export->getResponse();
@@ -2162,5 +2168,10 @@ class Grid
         }
     
         return getFilter($columnId) !== null;
+    }
+
+    public function setExportFilename($fileName)
+    {
+        $this->exportFileName = $fileName;
     }
 }
