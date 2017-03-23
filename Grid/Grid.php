@@ -545,7 +545,9 @@ class Grid
                 if ($export instanceof ContainerAwareInterface) {
                     $export->setContainer($this->container);
                 }
-                $export->setFileName($this->exportFileName);
+                if ($this->exportFileName) {
+                    $export->setFileName($this->exportFileName);
+                }
                 $export->computeData($this);
 
                 $this->exportResponse = $export->getResponse();
