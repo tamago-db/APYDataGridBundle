@@ -40,6 +40,11 @@ class Row
         return $this->repository ? $this->repository->find($primaryKeyValue) : null;
     }
 
+    public function getEntityClassName()
+    {
+        return $this->repository->getClassName();
+    }
+
     public function setField($rowId, $value)
     {
         $this->fields[$rowId] = $value;
