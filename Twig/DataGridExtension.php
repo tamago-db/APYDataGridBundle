@@ -351,7 +351,7 @@ class DataGridExtension extends \Twig_Extension
     protected function hasBlock($name)
     {
         foreach ($this->getTemplates() as $template) {
-            if ($template->hasBlock($name)) {
+            if (in_array($name, $template->getBlockNames())) {
                 return true;
             }
         }
