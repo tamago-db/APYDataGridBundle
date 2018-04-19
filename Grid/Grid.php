@@ -460,12 +460,9 @@ class Grid
             return;
         }
 
-        // Update filters if POSTing
-        if ($this->request->isMethod('POST')) {
-            $this->processRequestFilters();
-        }
+        $filtering = $this->processRequestFilters();
 
-        $this->processPage($this->getFromRequest(self::REQUEST_QUERY_PAGE), $this->request->isMethod('POST'));
+        $this->processPage($this->getFromRequest(self::REQUEST_QUERY_PAGE), $filtering);
 
         $this->processOrder($this->getFromRequest(self::REQUEST_QUERY_ORDER));
 
@@ -1016,12 +1013,12 @@ class Grid
 
     protected function createHash()
     {
-        //$this->hash = 'grid_'. (empty($this->id) ? md5($this->request->get('_controller').$this->columns->getHash().$this->source->getHash()) : $this->getId());
-        $hash = md5($this->request->get('_controller').$this->columns->getHash().$this->source->getHash());
+        $this->hash = 'grid_'. (empty($this->id) ? md5($this->request->get('_controller').$this->columns->getHash().$this->source->getHash()) : $this->getId());
+        /*$hash = md5($this->request->get('_controller').$this->columns->getHash().$this->source->getHash());
         if ($id = $this->getId()) {
             $hash = $id . '_' . $hash;
         }
-        $this->hash = 'grid_' . $hash;
+        $this->hash = 'grid_' . $hash;*/
     }
 
     public function getHash()
