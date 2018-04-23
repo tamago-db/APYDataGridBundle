@@ -664,44 +664,33 @@ class Grid
         return false;
     }
 
-    /**
-     * @todo Filter value management needs to be wrapped in a filter class of some sort
-     */
-    private function getFilterValue($column)
-    {
-        // Nothing in the request
-        if (! isset($this->requestData[$column->getId()])) {
-            return null;
-        }
-
-        $data = $this->requestData[$column->getId()];
-
-        if (is_string($data)) {
-            return $data ?: null;
-        }
-        elseif (is_array($data)) {
-            if (isset($data['from'][0])) {
-                // Don't use empty since "0" is considered to be empty
-                //if (! empty($data['from'][0])) {
-                if ('' != $data['from'][0]) {
-                    return $data;
-                }
-            } elseif (! empty($data['from'])) {
-                return $data;
-            }
-        }
-
-        return null;
-    }
-
     protected function processRequestFilters()
     {
+        $filtering = false;
         foreach ($this->columns as $column) {
-            // Loop through filterable columns
             if ($column->isFilterable()) {
-                $this->sessionData[$column->getId()] = $this->getFilterValue($column);
+                $ColumnId = $column->getId();
+                // Get data from request
+                $data = $this->getFromRequest($ColumnId);
+                //if no item is selectd in multi select filter : simulate empty first choice
+                if ($column->getFilterType() == 'select'
+                    && $column->getSelectMulti() === true
+                    && $data === null
+                    && $this->getFromRequest(self::REQUEST_QUERY_PAGE) === null
+                    && $this->getFromRequest(self::REQUEST_QUERY_ORDER) === null
+                    && $this->getFromRequest(self::REQUEST_QUERY_LIMIT) === null
+                    && ($this->getFromRequest(self::REQUEST_QUERY_MASS_ACTION) === null || $this->getFromRequest(self::REQUEST_QUERY_MASS_ACTION) == '-1')) {
+                    $data = ['from' => ''];
+                }
+                // Store in the session
+                $this->set($ColumnId, $data);
+                // Filtering ?
+                if (!$filtering && $data !== null) {
+                    $filtering = true;
+                }
             }
         }
+        return $filtering;
     }
     
     protected function processPage($page, $filtering = false)
