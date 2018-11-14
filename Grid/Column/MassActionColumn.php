@@ -21,7 +21,7 @@ class MassActionColumn extends Column
         parent::__construct([
             'id'         => self::ID,
             'title'      => '',
-            'size'       => 15,
+            'size'       => '30px',
             'filterable' => true,
             'sortable'   => false,
             'source'     => false,
