@@ -119,7 +119,7 @@ class DateTimeColumn extends Column
     protected function getDatetime($data, \DateTimeZone $timezone)
     {
         if ($data instanceof \DateTime || $data instanceof \DateTimeImmutable) {
-            return $data->setTimezone($timezone);
+            return $data->setTimezone($timezone->getName());
         }
 
         // the format method accept array or integer
