@@ -1241,7 +1241,7 @@ class Grid implements GridInterface
     public function addMassAction(MassActionInterface $action)
     {
         if ($action->getRole() === null || $this->securityContext->isGranted($action->getRole())) {
-            $this->massActions[] = $action;
+            $this->massActions[strtolower($action->getTitle())] = $action;
         }
 
         return $this;
